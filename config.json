@@ -1,0 +1,10 @@
+{
+    "Data": "Data",
+    "LogsDir":"Logs",
+    "Storage": "Storage",
+    "LogFiles":{
+        "Error":"error.log",
+        "Info":"info.log",
+        "Chat":"chat.log"
+    }
+}

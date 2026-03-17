@@ -1,0 +1,13 @@
+.vscode
+*test*
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/bin/
+*.log
+.env
+/Data
+.git
+
