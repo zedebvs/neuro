@@ -9,9 +9,15 @@ import (
 	"time"
 )
 
+type LogMessage struct {
+	consoleText string
+	fileText    string
+}
+
 type logFile struct {
 	file *os.File
-	mu   sync.Mutex
+	ch   chan LogMessage
+	wg   sync.WaitGroup
 }
 
 type Logger struct {
@@ -24,32 +30,51 @@ type LoggerWrite interface {
 	SaveLog(Message string, LogLevel uint8) error
 }
 
-func (desc *logFile) SaveLog(Message string, LogLelvel string, time time.Time) error {
-	desc.mu.Lock()
-	defer desc.mu.Unlock()
+func (desc *logFile) worker() {
+	defer desc.wg.Done()
 
-	colorText, text := ParseLogString(LogLelvel + Message)
+	for msg := range desc.ch {
+		fmt.Printf("%s\n", msg.consoleText)
+		desc.file.WriteString(msg.fileText)
+	}
+}
+
+func (desc *logFile) SaveLog(Message string, LogLevel string, time time.Time) {
+
+	timeConsole := fmt.Sprintf("$0 %s$", time.Format("15:04:05"))
+
+	colorText, text := ParseLogString(fmt.Sprintf("%s %s %s", timeConsole, LogLevel, Message))
+
 	timeStr := time.Format("2006-01-02 15:04:05")
 
 	fileText := fmt.Sprintf("%s %s\n", timeStr, text)
+	desc.ch <- LogMessage{consoleText: colorText, fileText: fileText}
+}
 
-	fmt.Printf("%s\n", colorText)
-	_, err := desc.file.WriteString(fileText)
-	return err
+func (desc *logFile) shutdown() {
+	close(desc.ch)
+	desc.wg.Wait()
+	desc.file.Close()
+}
+
+func (desc *Logger) Shutdown() {
+	desc.Error.shutdown()
+	desc.Chat.shutdown()
+	desc.Info.shutdown()
 }
 
 func (log *Logger) ErrorLog(message string, level uint) { //4
-	tag := fmt.Sprintf("$%d[ERROR]$ ", level)
+	tag := fmt.Sprintf("$%d[ERROR]$", level)
 	log.Error.SaveLog(message, tag, time.Now())
 }
 
 func (log *Logger) InfoLog(message string, level uint) { //3
-	tag := fmt.Sprintf("$%d[INFO]$ ", level)
+	tag := fmt.Sprintf("$%d[INFO]$", level)
 	log.Info.SaveLog(message, tag, time.Now())
 }
 
 func (log *Logger) ChatLog(message string, level uint) { //6
-	tag := fmt.Sprintf("$%d[CHAT]$ ", level)
+	tag := fmt.Sprintf("$%d[CHAT]$", level)
 	log.Chat.SaveLog(message, tag, time.Now())
 }
 
@@ -64,7 +89,12 @@ func OpenLogFile(FilePath string) *logFile {
 		utils.RedPanic("Произошла ошибка во время получения дескриптора лог файла " + FilePath)
 	}
 
-	return &logFile{file: LogDescriptor}
+	l := &logFile{file: LogDescriptor, ch: make(chan LogMessage, 100)}
+
+	l.wg.Add(1)
+	go l.worker()
+
+	return l
 }
 
 func init() {
