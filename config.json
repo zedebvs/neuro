@@ -6,5 +6,10 @@
         "Error":"error.log",
         "Info":"info.log",
         "Chat":"chat.log"
+    },
+    "Prompts":"Prompts",
+    "SystemPrompts":{
+        "FastModel":"FastModel.json",
+        "MainModel":"Main.json"
     }
 }
