@@ -35,7 +35,11 @@ func (desc *logFile) worker() {
 
 	for msg := range desc.ch {
 		fmt.Printf("%s\n", msg.consoleText)
-		desc.file.WriteString(msg.fileText)
+		_, err := desc.file.WriteString(msg.fileText)
+		if err != nil {
+			colorText, _ := ParseLogString("$4Во время записи лога произошла ошибка$")
+			fmt.Printf("%s\n", colorText)
+		}
 	}
 }
 
