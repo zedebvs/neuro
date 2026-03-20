@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	RunApp()
+
 	defer logger.Log.Shutdown()
 
 	actions := []func(){
@@ -47,7 +49,7 @@ func main() {
 	}
 
 	start := time.Now()
-	for range 10000 {
+	for range 10 {
 		actions[rand.Intn(11)]()
 	}
 	fmt.Printf("Время работы программы: %v\n", time.Since(start))

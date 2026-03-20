@@ -11,10 +11,12 @@ const FILENAME = "config.json"
 var Conf Config
 
 type Config struct {
-	Data     string            `json:"Data"`
-	LogsDir  string            `json:"LogsDir"`
-	Storage  string            `json:"Storage"`
-	LogFiles map[string]string `json:"LogFiles"`
+	Data          string            `json:"Data"`
+	LogsDir       string            `json:"LogsDir"`
+	Storage       string            `json:"Storage"`
+	LogFiles      map[string]string `json:"LogFiles"`
+	PromptsDir    string            `json:"Prompts"`
+	SystemPrompts map[string]string `json:"SystemPrompts"`
 }
 
 func (C *Config) DataPath(base string, filename string) (string, error) {

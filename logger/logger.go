@@ -101,11 +101,15 @@ func OpenLogFile(FilePath string) *logFile {
 	return l
 }
 
-func init() {
+func Run() {
 	Log = &Logger{}
 
-	PathDir, _ := config.Conf.DataPath(config.Conf.LogsDir, config.Conf.LogFiles["Error"])
-	err := utils.CreateDir(PathDir)
+	PathDir, err := config.Conf.DataPath(config.Conf.LogsDir, config.Conf.LogFiles["Error"])
+	if err != nil {
+		utils.RedPanic("Произошла ошибка во время проверки и создания папки с логами")
+	}
+
+	err = utils.CreateDir(PathDir)
 
 	if err != nil {
 		utils.RedPanic("Произошла ошибка во время проверки и создания папки с логами")
