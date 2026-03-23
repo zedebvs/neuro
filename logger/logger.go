@@ -43,7 +43,7 @@ func (desc *logFile) worker() {
 	}
 }
 
-func (desc *logFile) SaveLog(Message string, LogLevel string, time time.Time) {
+func (desc *logFile) saveLog(Message string, LogLevel string, time time.Time) {
 
 	timeConsole := fmt.Sprintf("$0 %s$", time.Format("15:04:05"))
 
@@ -69,22 +69,22 @@ func (desc *Logger) Shutdown() {
 
 func (log *Logger) ErrorLog(message string, level uint) { //4
 	tag := fmt.Sprintf("$%d[ERROR]$", level)
-	log.Error.SaveLog(message, tag, time.Now())
+	log.Error.saveLog(message, tag, time.Now())
 }
 
 func (log *Logger) InfoLog(message string, level uint) { //3
 	tag := fmt.Sprintf("$%d[INFO]$", level)
-	log.Info.SaveLog(message, tag, time.Now())
+	log.Info.saveLog(message, tag, time.Now())
 }
 
 func (log *Logger) ChatLog(message string, level uint) { //6
 	tag := fmt.Sprintf("$%d[CHAT]$", level)
-	log.Chat.SaveLog(message, tag, time.Now())
+	log.Chat.saveLog(message, tag, time.Now())
 }
 
 var Log *Logger
 
-func OpenLogFile(FilePath string) *logFile {
+func openLogFile(FilePath string) *logFile {
 
 	File, _ := config.Conf.DataPath(config.Conf.LogsDir, FilePath)
 	LogDescriptor, err := os.OpenFile(File, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
@@ -114,8 +114,8 @@ func Run() {
 	if err != nil {
 		utils.RedPanic("Произошла ошибка во время проверки и создания папки с логами")
 	}
-	Log.Error = OpenLogFile(config.Conf.LogFiles["Error"])
-	Log.Info = OpenLogFile(config.Conf.LogFiles["Info"])
-	Log.Chat = OpenLogFile(config.Conf.LogFiles["Chat"])
+	Log.Error = openLogFile(config.Conf.LogFiles["Error"])
+	Log.Info = openLogFile(config.Conf.LogFiles["Info"])
+	Log.Chat = openLogFile(config.Conf.LogFiles["Chat"])
 
 }
