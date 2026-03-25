@@ -2,13 +2,12 @@
 *test*
 *.exe
 *.exe~
-*.dll
 *.so
 *.dylib
 /bin/
 *.log
 .env
-/Data
+/Logs
 .git
 help.py
 .vs

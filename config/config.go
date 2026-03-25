@@ -17,6 +17,10 @@ type Config struct {
 	LogFiles      map[string]string `json:"LogFiles"`
 	PromptsDir    string            `json:"Prompts"`
 	SystemPrompts map[string]string `json:"SystemPrompts"`
+	ModelsDir     string            `json:"Models"`
+	Models        map[string]string `json:"ModelsNames"`
+	LibsDir       string            `json:"Libs"`
+	Libs          []string          `json:"LibsNames"`
 }
 
 func (C *Config) DataPath(base string, filename string) (string, error) {

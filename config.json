@@ -11,5 +11,14 @@
     "SystemPrompts":{
         "FastModel":"FastModel.json",
         "MainModel":"Main.json"
-    }
+    },
+    "Models":"Models",
+    "ModelsNames":{
+        "vad":"silero_vad.onnx"
+    },
+    "Libs":"Lib",
+    "LibsNames":[
+        "onnxruntime_providers_shared.dll",
+        "onnxruntime.dll"
+    ]
 }
