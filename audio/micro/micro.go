@@ -68,7 +68,7 @@ func (mic *Microphone) Resume() {
 func New() (*Microphone, error) {
 	port.Initialize()
 
-	buffer := make([]int16, 2048)
+	buffer := make([]int16, 512)
 	stream, err := port.OpenDefaultStream(1, 0, 16000, len(buffer), buffer)
 	if err != nil {
 		logger.Log.ErrorLog("$4При инициализации$ $5потока ввода$ $4произошла ошибка$", 4) //4 5 4
