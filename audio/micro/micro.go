@@ -10,7 +10,7 @@ import (
 )
 
 type Microphone struct {
-	ch     chan *[]float32
+	Ch     chan *[]float32
 	stream *port.Stream
 	wg     sync.WaitGroup
 	skip   atomic.Bool
@@ -42,7 +42,7 @@ func (mic *Microphone) worker() {
 		for i, v := range mic.buffer {
 			buffer[i] = float32(v) / 32768.0
 		}
-		mic.ch <- bufferPoint
+		mic.Ch <- bufferPoint
 	}
 }
 
@@ -53,16 +53,22 @@ func (mic *Microphone) Shutdown() {
 	mic.stream.Stop()
 	mic.stream.Close()
 
-	close(mic.ch)
+	close(mic.Ch)
 	port.Terminate()
 }
 
 func (mic *Microphone) Pause() {
 	mic.skip.Store(true)
+	logger.Log.InfoLog("$2Микрофон$ $6остановлен$", 3)
 }
 
 func (mic *Microphone) Resume() {
 	mic.skip.Store(false)
+	logger.Log.InfoLog("$2Микрофон$ $6успешно возобноввил работу$", 3)
+}
+
+func (mic *Microphone) Return(point *[]float32) {
+	mic.pool.Put(point)
 }
 
 func New() (*Microphone, error) {
@@ -83,18 +89,18 @@ func New() (*Microphone, error) {
 
 	logger.Log.InfoLog("$6Поток ввода$ $2успешно инициализирован и готов принимать звук$", 3) //2 6 3
 
-	pool := sync.Pool{
+	pool := &sync.Pool{
 		New: func() any {
-			buff := make([]float32, 2048)
+			buff := make([]float32, 512)
 			return &buff
 		},
 	}
 
 	micro := &Microphone{
-		ch:     make(chan *[]float32, 2048),
+		Ch:     make(chan *[]float32, 2048),
 		stream: stream,
 		buffer: buffer,
-		pool:   &pool,
+		pool:   pool,
 	}
 
 	micro.wg.Add(1)
