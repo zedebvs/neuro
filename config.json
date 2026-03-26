@@ -20,5 +20,9 @@
     "LibsNames":[
         "onnxruntime_providers_shared.dll",
         "onnxruntime.dll"
-    ]
+    ],
+    "threshold":0.5,
+    "startTolk":96,
+    "endTolk":1000,
+    "pause":2000
 }

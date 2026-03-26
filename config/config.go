@@ -21,6 +21,10 @@ type Config struct {
 	Models        map[string]string `json:"ModelsNames"`
 	LibsDir       string            `json:"Libs"`
 	Libs          []string          `json:"LibsNames"`
+	Threshold     float32           `json:"threshold"`
+	StartTolk     int               `json:"startTolk"`
+	EndTolk       int               `json:"endTolk"`
+	PauseTime     int               `json:"pause"`
 }
 
 func (C *Config) DataPath(base string, filename string) (string, error) {
