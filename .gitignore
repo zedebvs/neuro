@@ -11,3 +11,5 @@
 .git
 help.py
 .vs
+/Models
+/Lib

@@ -14,7 +14,8 @@
     },
     "Models":"Models",
     "ModelsNames":{
-        "vad":"silero_vad.onnx"
+        "vad":"silero_vad.onnx",
+        "stt":"ggml-small.bin"
     },
     "Libs":"Lib",
     "LibsNames":[
@@ -23,6 +24,6 @@
     ],
     "threshold":0.5,
     "startTolk":96,
-    "endTolk":1000,
-    "pause":2000
+    "endTolk":800,
+    "pause":3000
 }
